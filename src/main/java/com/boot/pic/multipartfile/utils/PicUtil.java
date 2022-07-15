@@ -1,5 +1,7 @@
 package com.boot.pic.multipartfile.utils;
 
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,18 +17,25 @@ import java.util.UUID;
 
 
 @Component
+@Data
 public  class PicUtil {
+
+
+
+    //@Value("${pic.path}")
+    //private String PATH;
+    ////文件新名称
+    //private String NEW_PIC_NAME;
 
     /**
      * 通过获取原文件名重新生成新的文件名加存储路径
      * 图片上传方法
-     * @param PATH   ： 图片存储的路径
      * @param pic    ： 图片流
      *
      * 其中输出的可以给他换成日志类，或者返给前端的东西
      */
-    public  void  uploadPic( String PATH,MultipartFile pic) {
-        if (pic.isEmpty()) {
+    public  void  uploadPic(String PATH,MultipartFile pic) {
+        if (!pic.isEmpty()) {
             System.out.println("存放文件的路径" + PATH);
             //获取图片原名称,带后缀名
             String originalFilename = pic.getOriginalFilename();
