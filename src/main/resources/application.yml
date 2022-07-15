@@ -1,0 +1,19 @@
+# 应用名称
+spring:
+  application:
+    name: MultipartFile
+  mvc:
+    view:
+      prefix: /
+      suffix: .html
+
+#端口号
+server:
+  port: 8089
+  servlet:
+    context-path: /pic
+
+
+
+pic:
+  path: /Users/linyi/Desktop/JAVA/utils/pic_multipartfile/src/main/resources/images/
