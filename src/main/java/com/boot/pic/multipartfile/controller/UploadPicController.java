@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author linyi
@@ -37,9 +39,9 @@ public class UploadPicController {
     @Autowired
     private PicUtil picUtil;
 
-    //从yml文件中读取路径
-    @Value("${pic.path}")
-    private String path;
+    ////从yml文件中读取路径
+    //@Value("${pic.path}")
+    //private String path;
 
     @Operation(summary = "上传功能",description = "字符串")
     @RequestMapping(value = "/upload",method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -47,17 +49,21 @@ public class UploadPicController {
             @Parameter(description="单文件流") @RequestPart("file") MultipartFile file,
             @Parameter(description = "多文件流") @RequestPart("photos") MultipartFile[] photos){
         //单文件上传
-        picUtil.uploadPic(path,file);
+        picUtil.uploadPic(file);
+        log.info("返回给前端新的图片名：{}",picUtil.getNEW_PIC_NAME());
 
+        List<String> picList = new ArrayList<>();
         //多文件上传
         if(photos.length !=0) {
             for (MultipartFile photo : photos) {
-                picUtil.uploadPic(path,photo);
+                picUtil.uploadPic(photo);
+                picList.add(picUtil.getNEW_PIC_NAME());
             }
         }else {
             //在此处爆出自定义异常的信息
             throw new CustomException("多文件上传为空");
         }
+        log.info("返回给前端新的图片名：{}",picList);
         return "ok";
     }
 
@@ -72,33 +78,14 @@ public class UploadPicController {
     public void downFile(
             @Parameter(description = "要下载的图片名") String name,
             HttpServletResponse response) {
-        try {
-            //输入流，通过输入流读取文件内容
-            FileInputStream fileInputStream = null;
-            fileInputStream = new FileInputStream(new File(path + name));
+        picUtil.downPic(name,response);
+    }
 
-            //
-            // 输出流，通过输出流将文件写入到浏览器，在浏览器展示图片
-            ServletOutputStream outputStream = response.getOutputStream();
-            //设置响应方式，图片文件
-            response.setContentType("image/jpeg");
 
-            //读取一行一行
-            int len = 0;
-
-            byte[] bytes = new byte[1024];
-
-            while ((len = fileInputStream.read(bytes)) != -1) {
-                outputStream.write(bytes, 0, len);
-                outputStream.flush();
-            }
-            //关闭资源
-            outputStream.close();
-            fileInputStream.close();
-        }catch (FileNotFoundException e) {
-            throw new CustomException("没有该图片："+name);
-        }catch (IOException e) {
-            throw new CustomException("存在异常");
-        }
+    @Operation(description = "图片的删除")
+    @GetMapping("/delete")
+    public void deleteFile(
+            @Parameter(description = "要删除的图片名") String name) {
+        picUtil.deletePic(name);
     }
 }
