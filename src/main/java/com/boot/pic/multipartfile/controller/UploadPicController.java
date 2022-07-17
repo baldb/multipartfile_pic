@@ -73,7 +73,7 @@ public class UploadPicController {
      * @param response
      */
     //文件下载
-    @Operation(description = "图片的下载/回显")
+    @Operation(summary = "图片回显功能",description = "图片的下载/回显")
     @GetMapping("/down")
     public void downFile(
             @Parameter(description = "要下载的图片名") String name,
@@ -82,10 +82,11 @@ public class UploadPicController {
     }
 
 
-    @Operation(description = "图片的删除")
+    @Operation(summary = "图片删除功能",description = "图片的删除")
     @GetMapping("/delete")
     public void deleteFile(
             @Parameter(description = "要删除的图片名") String name) {
         picUtil.deletePic(name);
     }
+
 }

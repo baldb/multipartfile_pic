@@ -119,11 +119,16 @@ public  class PicUtil {
     public void deletePic(String picName){
         //根据路径创建文件对象
         File file = new File(PATH+picName);
-        //路径是个文件且不为空时删除文件
-
-            if(!file.delete()){
+        log.info("要删除的图片是：{}",PATH+picName);
+        //判断删除是否成功
+        if(!file.delete()){
                 throw new CustomException("没有该图片");
-            }
+        }
 
+        //别人写的逻辑
+        ////路径是个文件且不为空时删除文件
+        //if(file.isFile()&&file.exists()){
+        //    flag = file.delete();
+        //}
     }
 }
